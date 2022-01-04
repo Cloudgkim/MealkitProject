@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.edu.mealkit.mapper.m_noticeMapper">
+
+	<!-- 게시글 목록 -->
+	<select id="m_noticelist" parameterType="String" resultType="com.edu.notice_board.domain.NoticeVO">
+	SELECT 	notice_bno, notice_title, notice_content
+	FROM	mealkitshopdb.notice_board
+	</select>
+	
+	<!-- 게시글 작성 -->
+	<insert id="insert" parameterType="com.edu.notice_board.domain.NoticeVO">
+	INSERT 	INTO notice_board (notice_title,	notice_content 	)
+				VALUES(#{notice_title},	#{notice_content} )
+	</insert>
+	
+	<!-- 게시글 상세 정보 -->
+	<select id="view" parameterType="int" resultType="com.edu.notice_board.domain.NoticeVO">
+	SELECT 	notice_bno, notice_title, notice_content
+	FROM	notice_board
+	WHERE	notice_bno = #{notice_bno}	
+	</select>
+	
+	<!-- 게시글 정보 수정 -->
+	<update id="update" parameterType="com.edu.notice_board.domain.NoticeVO">
+	UPDATE	notice_board
+	SET		notice_title	= #{notice_title},
+			notice_content	= #{notice_content}
+	WHERE	notice_bno		= #{notice_bno}
+	</update>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="delete" parameterType="int">
+	DELETE	FROM	notice_board
+	WHERE	notice_bno		= #{notice_bno}
+	</delete>
+	
+</mapper>

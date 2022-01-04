@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.edu.mealkit.mapper.mealkitMapper">
+
+
+	<select id="selectMealkit" resultType="com.edu.mealkit.dto.MemberDTO">
+		SELECT * FROM member
+	</select>
+
+	<!-- 회원 아이디 중복 검사 -->
+	<select id="idCheck" resultType="int">
+		SELECT	count(*)
+		FROM	member
+		WHERE	id = #{id}
+	</select>
+
+	<!-- 회원가입 (Ajax) -->
+	<insert id="register" parameterType="com.edu.mealkit.dto.MemberDTO">
+		INSERT 	INTO member
+				(id,	password,		name,		reg_date,	tel,	address,	birth)
+		VALUES	(#{id},	#{password},	#{name},	NOW(),		#{tel},	#{address},	#{birth})
+	</insert>
+	
+	<!-- 중복 회원가입 방지 -->
+	<select id="phoneCheck" parameterType="com.edu.mealkit.dto.MemberDTO" resultType="int">
+		SELECT COUNT(*)
+		FROM member
+		WHERE tel = #{tel}
+	</select>
+	
+	<!-- 로그인 -->
+	<select id="login" parameterType="com.edu.mealkit.dto.MemberDTO" resultType="com.edu.mealkit.dto.MemberDTO">
+		SELECT	*
+		FROM	member
+		WHERE	id			= #{id}
+		 AND	password	= #{password}
+	</select>
+
+<!-- 비밀번호 찾기 -->
+	<select id="findPass" parameterType="com.edu.mealkit.dto.MemberDTO" resultType="int">
+		SELECT COUNT(*)
+		FROM member
+		WHERE id = #{id}
+		AND tel = #{tel}
+	</select>
+	
+	<!-- 아이디찾기 -->
+	<select id = "findId" parameterType="com.edu.mealkit.dto.MemberDTO" resultType="String">
+		SELECT id FROM member WHERE tel = #{tel}
+	</select>
+	
+	
+	<!-- 비밀번호 새로 저장 -->
+	<update id="newPass" parameterType="com.edu.mealkit.dto.MemberDTO">
+		UPDATE member
+		SET password = #{password}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 회원 탈퇴 -->
+	<delete id="delete" parameterType="com.edu.mealkit.dto.MemberDTO" >
+
+		DELETE FROM member
+		WHERE	id = #{id}
+		AND	password = #{password};
+
+	</delete>
+	
+	<!-- 회원 정보 수정 -->
+	<update id="updateMypage" parameterType="com.edu.mealkit.dto.MemberDTO">
+		UPDATE member
+		SET password=#{password}, name=#{name}, tel=#{tel}, address=#{address}, birth=#{birth}
+		WHERE id=#{id}
+	</update>
+	
+		<!-- 추천인 이름 찾기 -->
+	<select id="findccname" parameterType="com.edu.mealkit.dto.MemberDTO" resultType="int">
+		SELECT COUNT(*)
+		FROM member
+		WHERE id = #{id}
+	</select>
+	
+	<!-- 추천인 넣기 -->
+	<update id="cc_id"  parameterType="HashMap" >
+		UPDATE member
+		SET m_cc = #{ccid}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 추천인 여부 -->
+	<select id="ccTrue" parameterType="com.edu.mealkit.dto.MemberDTO" resultType="int">
+		select count(m_cc)
+		from member
+		where id=#{ccid}	
+	</select>
+</mapper>
+
+	
+	

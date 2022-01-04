@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.edu.mealkit.mapper.managerMapper">
+    
+    <!-- 로그인 관련 mapper-->
+    <select id="managerLogin" parameterType="com.edu.mealkit.dto.ManagerDTO" resultType="com.edu.mealkit.dto.ManagerDTO">
+		SELECT	*
+		FROM	manager
+		WHERE	manager_id			= #{manager_id}
+		 AND	manager_password	= #{manager_password}
+	</select>
+	
+	<!-- 밀키트 이름 중복 검사 -->
+	<select id="mkCheck" resultType="int">
+		SELECT	count(*)
+		FROM	mealkit
+		WHERE	mk_name = #{mk_name}
+	</select>
+	
+   <!-- 제품 등록 -->
+	<insert id="register" parameterType="com.edu.mealkit.dto.MealkitDTO">
+		INSERT 	INTO mealkitshopdb.mealkit (mk_id,	mk_name,	mk_price,	mk_kind,	mk_count,	mk_img,		mk_content,		mk_discount_rate,		mk_thumbImg)
+		VALUES				(#{mk_id}, 	#{mk_name},	#{mk_price},#{mk_kind},	#{mk_count},#{mk_img},	#{mk_content},	#{mk_discount_rate},	#{mk_thumbImg} )
+	</insert>
+   
+   	<!-- 제품 목록 -->
+	<select id="productlist" resultType="com.edu.mealkit.dto.MealkitDTO" parameterType="com.edu.mealkit.dto.M_Criteria">
+		SELECT 				mk_id,	mk_name,	mk_price,	mk_kind,	mk_count,	mk_img,		mk_thumbImg,	mk_content,		mk_discount_rate
+		FROM	( SELECT 	mk_id,	mk_name,	mk_price,	mk_kind,	mk_count,	mk_img,		mk_thumbImg,	mk_content,		mk_discount_rate,
+							ROW_NUMBER() OVER(ORDER BY mk_id DESC) AS RNUM
+				  FROM mealkit         ) MK
+		WHERE 	RNUM BETWEEN #{rowStart} AND #{rowEnd}
+		ORDER 	BY mk_id DESC
+	</select>
+	
+	
+	<!-- 제품 총 개수 -->
+	<select id="productlistCount" resultType="int">
+	<![CDATA[
+		SELECT	COUNT(mk_id)
+		FROM	mealkit
+		WHERE	mk_id > 0	
+	]]>
+	</select>
+	
+	<!-- 구매 제품 총 개수 -->
+	<select id="orderListCount" resultType="int">
+	<![CDATA[
+		SELECT	COUNT(buy_id)
+		FROM	buy
+		WHERE	mk_id > 0	
+	]]>
+	</select>
+	
+	<!-- 제품 상세 정보 -->
+	<select id="productview" parameterType="int" resultType="com.edu.mealkit.dto.MealkitDTO">
+		SELECT 	mk_id,	mk_name,	mk_price,	mk_kind,	mk_count,	mk_img,		mk_thumbImg,	mk_content,		mk_discount_rate
+		FROM	mealkitshopdb.mealkit
+		WHERE	mk_id = #{mk_id}
+	</select>
+
+	<!-- 제품 정보 수정 -->
+	<update id="productupdate" parameterType="com.edu.mealkit.dto.MealkitDTO">
+		UPDATE	mealkitshopdb.mealkit
+		SET		mk_id		= #{mk_id},
+				mk_name		= #{mk_name},
+				mk_price	= #{mk_price},
+				mk_kind		= #{mk_kind},
+				mk_count	= #{mk_count},
+				mk_img		= #{mk_img},
+				mk_thumbImg = #{mk_thumbImg},
+				mk_content	= #{mk_content},
+				mk_discount_rate = #{mk_discount_rate}
+		WHERE	mk_id		= #{mk_id}
+	</update>
+
+	<!-- 제품 정보 삭제 -->
+	<delete id="productdelete" parameterType="int">
+		DELETE	FROM	mealkitshopdb.mealkit
+		WHERE	mk_id		= #{mk_id}
+	</delete>
+   
+    <!-- 주문 받은 제품 목록 -->
+   <select id="orderlist" resultType="com.edu.mealkit.dto.BuyDTO" parameterType="com.edu.mealkit.dto.M_Criteria">
+      SELECT             order_id, buy_id,   buy_count, buy_price, mk_name, mk_id, buy_date, delivery_name, delivery_tel, delivery_address, member_id, delivery
+      FROM   ( SELECT    order_id, buy_id,   buy_count, buy_price, mk_name, mk_id, buy_date, delivery_name, delivery_tel, delivery_address, member_id, delivery,
+                     ROW_NUMBER() OVER(ORDER BY buy_id asc) AS RNUM
+              FROM buy ) buy
+      WHERE    RNUM BETWEEN #{rowStart} AND #{rowEnd}
+   </select>
+
+	<!-- 주문 받은 제품 상세 정보 -->
+	<select id="orderView" resultType="com.edu.mealkit.dto.BuyDTO">
+		SELECT 	order_id, buy_id,	buy_count, buy_price, mk_name, mk_id, buy_date, delivery_name, delivery_tel, delivery_address, member_id, delivery
+		FROM	buy
+		WHERE	order_id = #{order_id}
+	</select>
+	
+	<!-- 구매목록 총 가격 찾기 -->
+	<select id="sumBuy" resultType="int">
+		SELECT	SUM(buy_price)
+		FROM 	buy
+		WHERE 	order_id = #{order_id}
+	</select>
+	
+	<!-- kind_name에 해당하는 제품 목록, 종류 가져오기 -->
+   	<select id="getKind" resultType="com.edu.mealkit.dto.MealkitKindDTO" parameterType="String"> 
+	   	SELECT kind_name ,kind_id
+	   	FROM   mealkitkind
+	   	where  kind_name= #{kind_name}
+   	</select>
+
+	<!-- 배송 상태 변경 -->
+	<update id="delivery">
+ 		UPDATE 	buy
+ 		SET 	delivery = #{delivery}
+ 		WHERE 	order_id = #{order_id}
+	</update>
+	
+	<!-- 회원목록가져오기 -->
+  	<select id="memberListView" resultType="com.edu.mealkit.dto.MemberDTO" >
+   		select id,password,name,reg_date,tel,address,birth
+   		from member 
+   	</select>
+   
+   	<!-- 특정한 회원정보를 수정한다  -->
+   	<update id = "memberUpdate" >
+     	update  member
+     	set password = #{password}, name = #{name}, tel = #{tel}, address = #{address}, birth = #{birth}
+     	where id= #{id}
+   	</update>
+   
+   
+   	<!-- 특정한 회원을 삭제한다  -->
+   	<delete id = "memberDelete" parameterType="String" >
+    	delete from member
+    	where id= #{id}
+   	</delete>
+   	
+   <!-- 제품 목록, 종류 가져오기 -->
+   <select id="kind" resultType="com.edu.mealkit.dto.MealkitKindDTO"> 
+		SELECT kind_name, count(mk_kind) kind_count
+		FROM mealkitkind LEFT JOIN mealkit
+		ON kind_name = mk_kind
+		GROUP BY kind_name
+		ORDER BY kind_name;
+   </select>
+
+   <!-- 서치한 제품 목록, 종류 가져오기 -->
+   <select id="searchkind" resultType="com.edu.mealkit.dto.MealkitKindDTO"> 
+		SELECT kind_name, count(mk_kind) kind_count
+		FROM mealkitkind LEFT JOIN mealkit
+		ON kind_name = mk_kind
+		<include refid="search"></include>
+		GROUP BY kind_name
+		ORDER BY kind_name;
+   </select>
+   
+   	<sql id="search">
+		<if test="searchType != null">
+			<if test="searchType == 't'.toString()">AND mk_name LIKE CONCAT('%',#{keyword},'%')</if>
+			<if test="searchType == 'c'.toString()">AND mk_kind LIKE CONCAT('%',#{keyword},'%')</if>
+		</if>
+	</sql>
+	
+	      <!-- 밀키트 재고 수량 조절 -->
+      <update id = "changeCount">
+         update   mealkit
+         set      mk_count = mk_count - #{mk_count}
+         where   mk_id = #{mk_id}
+      </update>
+
+</mapper>
+
+
+

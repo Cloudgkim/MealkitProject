@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 62 (91390) - https://sketch.com -->
+    <title>social/facebook</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M14.7666,6.1485 C15.3446,6.1275 15.9216,6.1435 16.5016,6.1435 L16.7406,6.1435 L16.7406,3.1355 C16.4316,3.1055 16.1086,3.0605 15.7856,3.0445 C15.1926,3.0195 14.5996,2.9895 14.0056,3.0035 C13.0996,3.0225 12.2426,3.2425 11.4936,3.7795 C10.6346,4.3975 10.1636,5.2655 9.9836,6.2895 C9.9096,6.7105 9.8906,7.1495 9.8786,7.5785 C9.8626,8.2535 9.8756,8.9275 9.8766,9.6035 L9.8766,9.8565 L6.9996,9.8565 L6.9996,13.2145 L9.8596,13.2145 L9.8596,21.6565 L13.3546,21.6565 L13.3546,13.2295 L16.2056,13.2295 C16.3516,12.1105 16.4946,11.0055 16.6436,9.8545 C16.4146,9.8545 16.2096,9.8535 16.0036,9.8545 C15.1926,9.8575 13.3316,9.8545 13.3316,9.8545 C13.3316,9.8545 13.3396,8.1905 13.3596,7.4675 C13.3876,6.4785 13.9746,6.1765 14.7666,6.1485" id="path-1"></path>
+    </defs>
+    <g id="social/facebook" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <use id="Mask" fill="#4C76BE" xlink:href="#path-1"></use>
+        <g id="swatch/white" mask="url(#mask-2)" fill="#FFFFFF">
+            <rect id="Rectangle" x="0" y="0" width="25" height="24"></rect>
+        </g>
+        <g id="black" mask="url(#mask-2)" fill="#000000" fill-rule="nonzero">
+            <rect id="Rectangle" x="0" y="0" width="24" height="24"></rect>
+        </g>
+    </g>
+</svg>

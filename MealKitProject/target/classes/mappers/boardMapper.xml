@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.edu.mealkit.mapper.boardMapper">
+
+	<!-- 게시글 작성 -->
+   <insert id="insert" parameterType="com.edu.board.domain.BoardVO">
+      INSERT    INTO board (title,       writer,      b_content,  b_kind)
+      VALUES(#{title},    #{writer},   #{b_content} , #{b_kind})
+   </insert>
+
+   <!-- 게시글 상세 정보 -->
+   <select id="view" parameterType="int" resultType="com.edu.board.domain.BoardVO">
+      SELECT    bno, title, b_content, writer, b_reg_Date, b_kind_name as b_kind
+      FROM   board, board_kind
+      WHERE   bno = #{bno}
+      AND b_kind_id = b_kind
+   </select>
+   
+   <!-- 게시글 정보 수정 -->
+   <update id="update" parameterType="com.edu.board.domain.BoardVO">
+      UPDATE   board
+      SET      writer   = #{writer},
+            title   = #{title},
+            b_content   = #{b_content},
+            b_kind = #{b_kind}
+      WHERE   bno      = #{bno}
+   </update>
+   
+   <!-- 문의 종류 갖고오기 -->
+	<select id="getKind" resultType="com.edu.board.domain.BoardKindDTO">
+		SELECT * FROM board_kind;
+	</select>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="delete" parameterType="int">
+	DELETE	FROM	board
+	WHERE	bno		= #{bno}
+	</delete>
+	
+	<!-- 내 꺼 게시글 목록 -->
+   <select id="list" resultType="com.edu.board.domain.BoardVO" parameterType="String">
+      SELECT bno, title, b_content, writer, b_reg_Date, b_kind_name as b_kind
+      FROM board, member, board_kind
+      WHERE #{id} = board.writer
+      AND id = writer
+      AND b_kind_id = b_kind
+   </select>
+   
+   <!-- 게시글 모든 목록 -->
+   <select id="listAll" resultType="com.edu.board.domain.BoardVO" parameterType="String">
+      SELECT bno, title, b_content, writer, b_reg_Date, b_kind_name as b_kind
+      FROM board, member, board_kind
+      WHERE id = writer
+      AND b_kind_id = b_kind
+   </select>
+
+<!-- 게시글 총 개수 -->
+ 	<select id="boardcount" resultType="int"  parameterType="String">
+ 	SELECT COUNT(bno)
+ 	FROM board
+ 	WHERE	writer		= #{id}
+ 	</select>
+
+</mapper>
+
+
